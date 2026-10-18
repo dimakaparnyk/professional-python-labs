@@ -1,0 +1,19 @@
+....................................................            [100%]
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.14-final-0 _______________
+
+Name                                  Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------------------
+src\computer_inventory\__init__.py        1      0      0      0   100%
+src\computer_inventory\analytics.py      52      0      8      0   100%
+src\computer_inventory\domain.py        106      1     16      1    98%   90, 114->exit
+src\computer_inventory\fileio.py        139      6     34      1    96%   57-62, 99
+src\computer_inventory\main.py           93     29     28      6    69%   30-31, 51, 77-86, 104-105, 107, 111-112, 116, 122-133, 137
+src\computer_inventory\models.py         19      0      8      0   100%
+src\computer_inventory\services.py       25      0      6      0   100%
+src\computer_inventory\streaming.py      75      0     24      1    99%   97->92
+---------------------------------------------------------------------------------
+TOTAL                                   510     36    124      9    93%
+Coverage HTML written to dir ../../work/coverage06
+Coverage JSON written to file ../../work/coverage06.json
+52 passed, 9 subtests passed in 1.46s

@@ -1,0 +1,28 @@
+         1700060 function calls (1700042 primitive calls) in 0.574 seconds
+
+   Ordered by: cumulative time
+   List reduced from 37 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.002    0.002    0.574    0.574 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\scripts\lab09.py:67(workload)
+        1    0.054    0.054    0.333    0.333 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\services.py:19(search_devices)
+   100000    0.083    0.000    0.279    0.000 {built-in method builtins.any}
+   499997    0.130    0.000    0.196    0.000 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\services.py:24(<genexpr>)
+        1    0.001    0.001    0.126    0.126 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\analytics.py:19(wrapped)
+        1    0.001    0.001    0.125    0.125 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\analytics.py:74(summarize)
+   499999    0.082    0.000    0.082    0.000 {method 'casefold' of 'str' objects}
+        1    0.048    0.048    0.075    0.075 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\analytics.py:61(group_by)
+        2    0.000    0.000    0.065    0.032 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\services.py:37(total_cost)
+        2    0.042    0.021    0.065    0.032 {built-in method builtins.sum}
+        1    0.023    0.023    0.039    0.039 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\services.py:29(filter_by_manufacturer)
+        1    0.000    0.000    0.033    0.033 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\services.py:42(average_cost)
+        1    0.000    0.000    0.029    0.029 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\analytics.py:70(count_types)
+        1    0.000    0.000    0.029    0.029 C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\collections\__init__.py:595(__init__)
+        1    0.000    0.000    0.029    0.029 C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\collections\__init__.py:669(update)
+        1    0.017    0.017    0.029    0.029 {built-in method _collections._count_elements}
+        1    0.000    0.000    0.026    0.026 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\services.py:51(most_expensive)
+        1    0.018    0.018    0.026    0.026 {built-in method builtins.max}
+   200002    0.023    0.000    0.023    0.000 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\src\computer_inventory\services.py:39(<genexpr>)
+   100000    0.014    0.000    0.014    0.000 {method 'append' of 'list' objects}
+
+

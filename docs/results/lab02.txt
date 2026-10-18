@@ -1,0 +1,40 @@
+{
+  "count": 4,
+  "total": "92700.00",
+  "average": "23175.00",
+  "most_expensive": "INV-003",
+  "manufacturers": [
+    "Dell",
+    "HP",
+    "Lenovo"
+  ],
+  "types": {
+    "Ноутбук": 2,
+    "Монітор": 1,
+    "Принтер": 1
+  }
+}
+Dell: ['INV-002', 'INV-003']
+Groups: {'Lenovo': 1, 'Dell': 2, 'HP': 1}
+Counter: Counter({'Ноутбук': 2, 'Монітор': 1, 'Принтер': 1})
+Closure: ['INV-001', 'INV-003']
+[
+  {
+    "records": 1000,
+    "list_seconds": 2.1108000073581934e-05,
+    "dict_seconds": 5.607199971564114e-08,
+    "build_seconds": 7.249999907799065e-05
+  },
+  {
+    "records": 10000,
+    "list_seconds": 0.00021436600014567374,
+    "dict_seconds": 5.693800048902631e-08,
+    "build_seconds": 0.0010067000112030655
+  },
+  {
+    "records": 100000,
+    "list_seconds": 0.002394588000024669,
+    "dict_seconds": 5.717799998819828e-08,
+    "build_seconds": 0.01732590000028722
+  }
+]

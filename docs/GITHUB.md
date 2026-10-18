@@ -6,7 +6,7 @@
 Оберіть видимість за вимогами викладача. Не додавайте README, .gitignore
 або license під час створення: ці файли вже є локально.
 
-У ZIP є папка `.git` і готова історія з трьох логічних комітів.
+У ZIP є папка `.git` і готова історія логічних комітів усіх лабораторних робіт.
 Розпакуйте весь ZIP, включно з прихованою `.git`. Відкрийте PowerShell
 у папці, де знаходиться `pyproject.toml`. Середовище `.venv` треба створити
 за README; в архів воно не входить.
@@ -23,7 +23,7 @@ git status
 git log --oneline
 ```
 
-Три підготовлені коміти мають службового автора `Lab Preparation`
+Підготовлені коміти мають службового автора `Lab Preparation`
 (`lab-preparation@example.invalid`). Зміна config змінює автора лише
 майбутніх комітів. Не видавайте службову історію за власні етапи роботи;
 для демонстрації своїх етапів повторіть їх самостійно в окремій папці.
@@ -36,6 +36,7 @@ git log --oneline
 git remote add origin https://github.com/YOUR_USERNAME/computer-inventory.git
 git remote -v
 git push -u origin main
+git push origin --tags
 ```
 
 Під час першого push Git Credential Manager може відкрити браузер.
@@ -49,7 +50,7 @@ git remote set-url origin https://github.com/YOUR_USERNAME/computer-inventory.gi
 ```
 
 Оновіть сторінку репозиторію: мають бути README, src, tests, pyproject.toml
-і три коміти. `.venv` та кеші не повинні з’являтися.
+та історія лабораторних. `.venv` та кеші не повинні з’являтися.
 
 ## 4. Наступні зміни
 
@@ -71,7 +72,7 @@ git add .gitignore pyproject.toml src/computer_inventory/__init__.py
 git commit -m "Create project structure and packaging configuration"
 git add src/computer_inventory/models.py src/computer_inventory/services.py
 git commit -m "Add device model and inventory business logic"
-git add src/computer_inventory/main.py tests README.md docs
+git add .
 git commit -m "Add console interface tests and documentation"
 ```
 
@@ -79,3 +80,10 @@ git commit -m "Add console interface tests and documentation"
 
 Офіційна інструкція:
 https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github
+
+## Перевірка CI
+
+Відкрийте вкладку Actions після push. Дочекайтеся workflow Inventory CI.
+Успіх підтверджено лише коли quality і docker завершаться зеленими.
+При помилці відкрийте конкретний step і збережіть його журнал; не
+використовуйте сторонній або намальований screenshot green pipeline.

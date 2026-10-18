@@ -1,0 +1,183 @@
+[
+  {
+    "method": "POST",
+    "path": "/devices",
+    "status": 201,
+    "request": {
+      "inventory_number": "INV-001",
+      "type": "Ноутбук",
+      "manufacturer": "Lenovo",
+      "model": "ThinkPad E14",
+      "value": "32000"
+    },
+    "response": {
+      "id": 1,
+      "inventory_number": "INV-001",
+      "type": "Ноутбук",
+      "manufacturer": "Lenovo",
+      "manufacturer_id": 1,
+      "model": "ThinkPad E14",
+      "value": "32000.00",
+      "location": null
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/devices",
+    "status": 201,
+    "request": {
+      "inventory_number": "INV-002",
+      "type": "Монітор",
+      "manufacturer": "Dell",
+      "model": "P2422H",
+      "value": "8500"
+    },
+    "response": {
+      "id": 2,
+      "inventory_number": "INV-002",
+      "type": "Монітор",
+      "manufacturer": "Dell",
+      "manufacturer_id": 2,
+      "model": "P2422H",
+      "value": "8500.00",
+      "location": null
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/devices",
+    "status": 201,
+    "request": {
+      "inventory_number": "INV-003",
+      "type": "Ноутбук",
+      "manufacturer": "Dell",
+      "model": "Latitude 5440",
+      "value": "45000"
+    },
+    "response": {
+      "id": 3,
+      "inventory_number": "INV-003",
+      "type": "Ноутбук",
+      "manufacturer": "Dell",
+      "manufacturer_id": 2,
+      "model": "Latitude 5440",
+      "value": "45000.00",
+      "location": null
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/devices",
+    "status": 201,
+    "request": {
+      "inventory_number": "INV-004",
+      "type": "Принтер",
+      "manufacturer": "HP",
+      "model": "LaserJet M110w",
+      "value": "7200"
+    },
+    "response": {
+      "id": 4,
+      "inventory_number": "INV-004",
+      "type": "Принтер",
+      "manufacturer": "HP",
+      "manufacturer_id": 3,
+      "model": "LaserJet M110w",
+      "value": "7200.00",
+      "location": null
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/health",
+    "status": 200,
+    "response": {
+      "status": "ok"
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/devices",
+    "status": 200,
+    "response": [
+      {
+        "id": 1,
+        "inventory_number": "INV-001",
+        "type": "Ноутбук",
+        "manufacturer": "Lenovo",
+        "manufacturer_id": 1,
+        "model": "ThinkPad E14",
+        "value": "32000.00",
+        "location": null
+      },
+      {
+        "id": 2,
+        "inventory_number": "INV-002",
+        "type": "Монітор",
+        "manufacturer": "Dell",
+        "manufacturer_id": 2,
+        "model": "P2422H",
+        "value": "8500.00",
+        "location": null
+      },
+      {
+        "id": 3,
+        "inventory_number": "INV-003",
+        "type": "Ноутбук",
+        "manufacturer": "Dell",
+        "manufacturer_id": 2,
+        "model": "Latitude 5440",
+        "value": "45000.00",
+        "location": null
+      },
+      {
+        "id": 4,
+        "inventory_number": "INV-004",
+        "type": "Принтер",
+        "manufacturer": "HP",
+        "manufacturer_id": 3,
+        "model": "LaserJet M110w",
+        "value": "7200.00",
+        "location": null
+      }
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/devices/statistics",
+    "status": 200,
+    "response": {
+      "count": 4,
+      "total": "92700.00",
+      "average": "23175.00",
+      "most_expensive_id": 3
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/manufacturers/2/devices",
+    "status": 200,
+    "response": [
+      {
+        "id": 2,
+        "inventory_number": "INV-002",
+        "type": "Монітор",
+        "manufacturer": "Dell",
+        "manufacturer_id": 2,
+        "model": "P2422H",
+        "value": "8500.00",
+        "location": null
+      },
+      {
+        "id": 3,
+        "inventory_number": "INV-003",
+        "type": "Ноутбук",
+        "manufacturer": "Dell",
+        "manufacturer_id": 2,
+        "model": "Latitude 5440",
+        "value": "45000.00",
+        "location": null
+      }
+    ]
+  }
+]

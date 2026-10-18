@@ -1,0 +1,6 @@
+Devices: 2 Total: 48000.00 UAH Average: 24000.00 UAH
+Computer maintenance: 180 days
+Printer maintenance: 90 days
+Contains C-1: True
+Best: Computer(inventory_number='C-1', device_type='Computer', manufacturer='Dell', model='Latitude', cost=Decimal('40000'), ram_gb=16)
+Dell: [Computer(inventory_number='C-1', device_type='Computer', manufacturer='Dell', model='Latitude', cost=Decimal('40000'), ram_gb=16)]

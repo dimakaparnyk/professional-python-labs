@@ -1,0 +1,6 @@
+{"records": 10000, "mode": "eager", "seconds": 0.20339760000933893, "peak_MiB": 4.951862335205078, "valid": 10000, "total": "59997500.00"}
+{"records": 10000, "mode": "streaming", "seconds": 0.20275340002262965, "peak_MiB": 1.0321807861328125, "valid": 10000, "total": "59997500.00"}
+{"records": 100000, "mode": "eager", "seconds": 2.20865159999812, "peak_MiB": 48.10053062438965, "valid": 100000, "total": "4199975000.00"}
+{"records": 100000, "mode": "streaming", "seconds": 2.0230564999801572, "peak_MiB": 9.935513496398926, "valid": 100000, "total": "4199975000.00"}
+{"records": 500000, "mode": "eager", "seconds": 12.248323599982541, "peak_MiB": 236.49817276000977, "valid": 500000, "total": "21999875000.00"}
+{"records": 500000, "mode": "streaming", "seconds": 12.631441700010328, "peak_MiB": 40.83097839355469, "valid": 500000, "total": "21999875000.00"}

@@ -1,0 +1,9 @@
+{
+  "count": 4,
+  "total": "92700.00",
+  "average": "23175.00",
+  "most_expensive_id": 3
+}
+Dell: ['INV-002', 'INV-003']
+Duplicate batch rolled back
+DB-API: [('INV-002', 'Dell', 850000)]

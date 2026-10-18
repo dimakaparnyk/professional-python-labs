@@ -1,0 +1,19 @@
+{
+  "measurements": [
+    {
+      "method": "linear",
+      "seconds": 0.973383600008674,
+      "queries": 200,
+      "records": 100000
+    },
+    {
+      "method": "indexed",
+      "seconds": 0.00012689997674897313,
+      "queries": 200,
+      "records": 100000
+    }
+  ],
+  "index_build_s": 0.01816910001798533,
+  "lookup_speedup": 7670.478946849378,
+  "speedup_including_build": 53.20198952168887
+}

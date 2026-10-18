@@ -1,0 +1,41 @@
+{
+  "weak_passed_without_result_check": true,
+  "strong_assertion_detected_defect": true,
+  "branch_before": {
+    "covered_lines": 3,
+    "num_statements": 4,
+    "percent_covered": 66.66666666666667,
+    "percent_covered_display": "67",
+    "missing_lines": 1,
+    "excluded_lines": 0,
+    "percent_statements_covered": 75.0,
+    "percent_statements_covered_display": "75",
+    "num_branches": 2,
+    "num_partial_branches": 1,
+    "covered_branches": 1,
+    "missing_branches": 1,
+    "percent_branches_covered": 50.0,
+    "percent_branches_covered_display": "50"
+  },
+  "branch_after": {
+    "covered_lines": 4,
+    "num_statements": 4,
+    "percent_covered": 100.0,
+    "percent_covered_display": "100",
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "percent_statements_covered": 100.0,
+    "percent_statements_covered_display": "100",
+    "num_branches": 2,
+    "num_partial_branches": 0,
+    "covered_branches": 2,
+    "missing_branches": 0,
+    "percent_branches_covered": 100.0,
+    "percent_branches_covered_display": "100"
+  },
+  "random_sequence_passed": 15,
+  "random_sequence_failed": 5,
+  "seeded_test_passed": 20,
+  "mock_fake_equivalent": true,
+  "filesystem_isolated": true
+}

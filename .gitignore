@@ -18,3 +18,4 @@ htmlcov/
 *.db-wal
 data/export.json
 *.log
+work/

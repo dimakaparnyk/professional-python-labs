@@ -1,0 +1,182 @@
+running egg_info
+writing src\inventory_service.egg-info\PKG-INFO
+writing dependency_links to src\inventory_service.egg-info\dependency_links.txt
+writing entry points to src\inventory_service.egg-info\entry_points.txt
+writing requirements to src\inventory_service.egg-info\requires.txt
+writing top-level names to src\inventory_service.egg-info\top_level.txt
+reading manifest file 'src\inventory_service.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'src\inventory_service.egg-info\SOURCES.txt'
+running sdist
+running egg_info
+writing src\inventory_service.egg-info\PKG-INFO
+writing dependency_links to src\inventory_service.egg-info\dependency_links.txt
+writing entry points to src\inventory_service.egg-info\entry_points.txt
+writing requirements to src\inventory_service.egg-info\requires.txt
+writing top-level names to src\inventory_service.egg-info\top_level.txt
+reading manifest file 'src\inventory_service.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'src\inventory_service.egg-info\SOURCES.txt'
+running check
+creating inventory_service-1.0.0
+creating inventory_service-1.0.0\data
+creating inventory_service-1.0.0\docs
+creating inventory_service-1.0.0\experiments
+creating inventory_service-1.0.0\migrations
+creating inventory_service-1.0.0\scripts
+creating inventory_service-1.0.0\src\computer_inventory
+creating inventory_service-1.0.0\src\inventory_service
+creating inventory_service-1.0.0\src\inventory_service.egg-info
+creating inventory_service-1.0.0\tests
+copying files to inventory_service-1.0.0...
+copying Dockerfile -> inventory_service-1.0.0
+copying MANIFEST.in -> inventory_service-1.0.0
+copying README.md -> inventory_service-1.0.0
+copying compose.yaml -> inventory_service-1.0.0
+copying config.yaml -> inventory_service-1.0.0
+copying pyproject.toml -> inventory_service-1.0.0
+copying requirements.lock -> inventory_service-1.0.0
+copying data\inventory.csv -> inventory_service-1.0.0\data
+copying docs\GITHUB.md -> inventory_service-1.0.0\docs
+copying docs\VALIDATION.md -> inventory_service-1.0.0\docs
+copying experiments\io_benchmark.py -> inventory_service-1.0.0\experiments
+copying experiments\testing_quality.py -> inventory_service-1.0.0\experiments
+copying experiments\type_errors.txt -> inventory_service-1.0.0\experiments
+copying migrations\001_initial.sql -> inventory_service-1.0.0\migrations
+copying migrations\002_location.sql -> inventory_service-1.0.0\migrations
+copying scripts\lab02.py -> inventory_service-1.0.0\scripts
+copying scripts\lab03.py -> inventory_service-1.0.0\scripts
+copying scripts\lab04.py -> inventory_service-1.0.0\scripts
+copying scripts\lab05.py -> inventory_service-1.0.0\scripts
+copying scripts\lab07.py -> inventory_service-1.0.0\scripts
+copying scripts\lab09.py -> inventory_service-1.0.0\scripts
+copying scripts\profile_index.py -> inventory_service-1.0.0\scripts
+copying src\computer_inventory\__init__.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\analytics.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\api.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\async_client.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\database.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\domain.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\fileio.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\main.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\models.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\performance.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\py.typed -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\services.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\computer_inventory\streaming.py -> inventory_service-1.0.0\src\computer_inventory
+copying src\inventory_service\__init__.py -> inventory_service-1.0.0\src\inventory_service
+copying src\inventory_service\api.py -> inventory_service-1.0.0\src\inventory_service
+copying src\inventory_service\config.py -> inventory_service-1.0.0\src\inventory_service
+copying src\inventory_service\main.py -> inventory_service-1.0.0\src\inventory_service
+copying src\inventory_service\py.typed -> inventory_service-1.0.0\src\inventory_service
+copying src\inventory_service.egg-info\PKG-INFO -> inventory_service-1.0.0\src\inventory_service.egg-info
+copying src\inventory_service.egg-info\SOURCES.txt -> inventory_service-1.0.0\src\inventory_service.egg-info
+copying src\inventory_service.egg-info\dependency_links.txt -> inventory_service-1.0.0\src\inventory_service.egg-info
+copying src\inventory_service.egg-info\entry_points.txt -> inventory_service-1.0.0\src\inventory_service.egg-info
+copying src\inventory_service.egg-info\requires.txt -> inventory_service-1.0.0\src\inventory_service.egg-info
+copying src\inventory_service.egg-info\top_level.txt -> inventory_service-1.0.0\src\inventory_service.egg-info
+copying tests\test_api.py -> inventory_service-1.0.0\tests
+copying tests\test_cli.py -> inventory_service-1.0.0\tests
+copying tests\test_config.py -> inventory_service-1.0.0\tests
+copying tests\test_core.py -> inventory_service-1.0.0\tests
+copying tests\test_database.py -> inventory_service-1.0.0\tests
+copying tests\test_inventory.py -> inventory_service-1.0.0\tests
+copying tests\test_performance.py -> inventory_service-1.0.0\tests
+Writing inventory_service-1.0.0\setup.cfg
+Creating tar archive
+removing 'inventory_service-1.0.0' (and everything under it)
+running egg_info
+writing src\inventory_service.egg-info\PKG-INFO
+writing dependency_links to src\inventory_service.egg-info\dependency_links.txt
+writing entry points to src\inventory_service.egg-info\entry_points.txt
+writing requirements to src\inventory_service.egg-info\requires.txt
+writing top-level names to src\inventory_service.egg-info\top_level.txt
+reading manifest file 'src\inventory_service.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'src\inventory_service.egg-info\SOURCES.txt'
+running bdist_wheel
+running build
+running build_py
+creating build\lib\computer_inventory
+copying src\computer_inventory\analytics.py -> build\lib\computer_inventory
+copying src\computer_inventory\api.py -> build\lib\computer_inventory
+copying src\computer_inventory\async_client.py -> build\lib\computer_inventory
+copying src\computer_inventory\database.py -> build\lib\computer_inventory
+copying src\computer_inventory\domain.py -> build\lib\computer_inventory
+copying src\computer_inventory\fileio.py -> build\lib\computer_inventory
+copying src\computer_inventory\main.py -> build\lib\computer_inventory
+copying src\computer_inventory\models.py -> build\lib\computer_inventory
+copying src\computer_inventory\performance.py -> build\lib\computer_inventory
+copying src\computer_inventory\services.py -> build\lib\computer_inventory
+copying src\computer_inventory\streaming.py -> build\lib\computer_inventory
+copying src\computer_inventory\__init__.py -> build\lib\computer_inventory
+creating build\lib\inventory_service
+copying src\inventory_service\api.py -> build\lib\inventory_service
+copying src\inventory_service\config.py -> build\lib\inventory_service
+copying src\inventory_service\main.py -> build\lib\inventory_service
+copying src\inventory_service\__init__.py -> build\lib\inventory_service
+running egg_info
+writing src\inventory_service.egg-info\PKG-INFO
+writing dependency_links to src\inventory_service.egg-info\dependency_links.txt
+writing entry points to src\inventory_service.egg-info\entry_points.txt
+writing requirements to src\inventory_service.egg-info\requires.txt
+writing top-level names to src\inventory_service.egg-info\top_level.txt
+reading manifest file 'src\inventory_service.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'src\inventory_service.egg-info\SOURCES.txt'
+copying src\computer_inventory\py.typed -> build\lib\computer_inventory
+copying src\inventory_service\py.typed -> build\lib\inventory_service
+installing to build\bdist.win-amd64\wheel
+running install
+running install_lib
+creating build\bdist.win-amd64\wheel
+creating build\bdist.win-amd64\wheel\computer_inventory
+copying build\lib\computer_inventory\analytics.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\api.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\async_client.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\database.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\domain.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\fileio.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\main.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\models.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\performance.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\py.typed -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\services.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\streaming.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+copying build\lib\computer_inventory\__init__.py -> build\bdist.win-amd64\wheel\.\computer_inventory
+creating build\bdist.win-amd64\wheel\inventory_service
+copying build\lib\inventory_service\api.py -> build\bdist.win-amd64\wheel\.\inventory_service
+copying build\lib\inventory_service\config.py -> build\bdist.win-amd64\wheel\.\inventory_service
+copying build\lib\inventory_service\main.py -> build\bdist.win-amd64\wheel\.\inventory_service
+copying build\lib\inventory_service\py.typed -> build\bdist.win-amd64\wheel\.\inventory_service
+copying build\lib\inventory_service\__init__.py -> build\bdist.win-amd64\wheel\.\inventory_service
+running install_egg_info
+Copying src\inventory_service.egg-info to build\bdist.win-amd64\wheel\.\inventory_service-1.0.0-py3.12.egg-info
+running install_scripts
+creating build\bdist.win-amd64\wheel\inventory_service-1.0.0.dist-info\WHEEL
+creating 'C:\\Users\\user\\Documents\\Codex\\2026-10-18\\new-chat-2\\outputs\\computer-inventory\\dist\\.tmp-uxy5awp3\\inventory_service-1.0.0-py3-none-any.whl' and adding 'build\\bdist.win-amd64\\wheel' to it
+adding 'computer_inventory/__init__.py'
+adding 'computer_inventory/analytics.py'
+adding 'computer_inventory/api.py'
+adding 'computer_inventory/async_client.py'
+adding 'computer_inventory/database.py'
+adding 'computer_inventory/domain.py'
+adding 'computer_inventory/fileio.py'
+adding 'computer_inventory/main.py'
+adding 'computer_inventory/models.py'
+adding 'computer_inventory/performance.py'
+adding 'computer_inventory/py.typed'
+adding 'computer_inventory/services.py'
+adding 'computer_inventory/streaming.py'
+adding 'inventory_service/__init__.py'
+adding 'inventory_service/api.py'
+adding 'inventory_service/config.py'
+adding 'inventory_service/main.py'
+adding 'inventory_service/py.typed'
+adding 'inventory_service-1.0.0.dist-info/METADATA'
+adding 'inventory_service-1.0.0.dist-info/WHEEL'
+adding 'inventory_service-1.0.0.dist-info/entry_points.txt'
+adding 'inventory_service-1.0.0.dist-info/top_level.txt'
+adding 'inventory_service-1.0.0.dist-info/RECORD'
+removing build\bdist.win-amd64\wheel
+Successfully built inventory_service-1.0.0.tar.gz and inventory_service-1.0.0-py3-none-any.whl

@@ -1,0 +1,19 @@
+[
+  {
+    "mode": "strict",
+    "processed": 101,
+    "valid": 100,
+    "invalid": 1,
+    "exported": 0,
+    "status": "RecordValidationError caused by InvalidOperation"
+  },
+  {
+    "mode": "tolerant",
+    "processed": 1010,
+    "valid": 1000,
+    "invalid": 10,
+    "exported": 1000,
+    "status": "success"
+  }
+]
+Atomic export: previous output preserved; temporary file removed

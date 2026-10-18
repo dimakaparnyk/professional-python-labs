@@ -1,0 +1,12 @@
+         19980702 function calls in 6.924 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.002    0.002    6.924    6.924 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\scripts\profile_index.py:19(linear)
+      400    3.910    0.010    6.921    0.017 C:\Users\user\Documents\Codex\2026-10-18\new-chat-2\outputs\computer-inventory\scripts\profile_index.py:20(<genexpr>)
+      200    0.000    0.000    6.920    0.035 {built-in method builtins.next}
+ 19980100    3.010    0.000    3.010    0.000 {method 'casefold' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
