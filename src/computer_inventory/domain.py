@@ -156,3 +156,11 @@ def from_payload(payload: DevicePayload) -> Device:
     return Device(payload["inventory_number"], payload["device_type"],
                   payload["manufacturer"], payload["model"],
                   Decimal(payload["cost"]))
+
+
+class AsyncInventoryProvider(Protocol):
+    async def fetch(self) -> list[Device]: ...
+
+
+async def load_remote(provider: AsyncInventoryProvider) -> list[Device]:
+    return await provider.fetch()
