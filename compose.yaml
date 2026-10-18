@@ -1,0 +1,13 @@
+services:
+  inventory:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:////data/inventory.db
+      APP_ENV: production
+      LOG_LEVEL: INFO
+    volumes:
+      - inventory-data:/data
+volumes:
+  inventory-data:

@@ -8,3 +8,13 @@ dist/
 build/
 *.egg-info/
 .env
+
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+*.db
+*.db-shm
+*.db-wal
+data/export.json
+*.log

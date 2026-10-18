@@ -1,0 +1,37 @@
+name: Inventory CI
+on: [push, pull_request]
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -e ".[test,dev]"
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: mypy src
+      - run: pytest --cov=computer_inventory --cov=inventory_service --cov-branch --cov-fail-under=80 --cov-report=term-missing
+      - run: python -m build
+      - run: python -m venv wheel-check && wheel-check/bin/pip install dist/*.whl && wheel-check/bin/python -m inventory_service.main --demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.python-version }}
+          path: dist/
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t inventory-service:test .
+      - run: docker run -d --name inventory -p 8000:8000 -v inventory-data:/data -e APP_ENV=production inventory-service:test
+      - run: |
+          for i in $(seq 1 30); do
+            if curl --fail http://127.0.0.1:8000/health; then exit 0; fi
+            sleep 1
+          done
+          docker logs inventory
+          exit 1
