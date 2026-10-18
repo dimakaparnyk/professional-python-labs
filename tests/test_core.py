@@ -1,33 +1,57 @@
 import asyncio
-from dataclasses import replace
 from decimal import Decimal
-from io import StringIO
-from pathlib import Path
 from unittest.mock import AsyncMock, Mock
 
 import pytest
 
 from computer_inventory.analytics import (
-    build_index, count_types, group_by, history, make_cost_filter, merge,
-    select, summarize, unique_manufacturers,
+    build_index,
+    count_types,
+    group_by,
+    history,
+    make_cost_filter,
+    merge,
+    select,
+    summarize,
+    unique_manufacturers,
 )
 from computer_inventory.domain import (
-    Computer, Printer, InventoryRegistry, MaintenanceService,
-    StandardMaintenance, Money, Manufacturer, from_payload, load_remote,
+    Computer,
+    InventoryRegistry,
+    MaintenanceService,
+    Manufacturer,
+    Money,
+    Printer,
+    StandardMaintenance,
+    from_payload,
+    load_remote,
 )
 from computer_inventory.fileio import (
-    ConfigurationError, FileConfig, ImportExportError, ImportStats,
-    RecordValidationError, atomic_text, export_json, import_csv,
-    load_config, run_import, validate_record,
+    ConfigurationError,
+    FileConfig,
+    ImportExportError,
+    ImportStats,
+    RecordValidationError,
+    export_json,
+    import_csv,
+    load_config,
+    run_import,
+    validate_record,
 )
-from computer_inventory.models import Device
 from computer_inventory.streaming import (
-    InventoryNumbers, aggregate, batches, clean_rows, generate_csv,
-    multi_file, pipeline, filter_devices, transform,
+    InventoryNumbers,
+    aggregate,
+    batches,
+    clean_rows,
+    generate_csv,
+    multi_file,
+    pipeline,
 )
 
 
-@pytest.mark.parametrize("value", ["-0.01", "NaN", "Infinity", "1.001", "1000000000001"])
+@pytest.mark.parametrize(
+    "value", ["-0.01", "NaN", "Infinity", "1.001", "1000000000001"]
+)
 def test_invalid_cost(value, device_factory):
     with pytest.raises(ValueError):
         device_factory(cost=value)
@@ -52,13 +76,20 @@ def test_invalid_money():
 
 def test_immutable(device_factory):
     from dataclasses import FrozenInstanceError
+
     with pytest.raises(FrozenInstanceError):
         device_factory().cost = Decimal(4)
 
 
 def test_computer_printer(device_factory):
     base = device_factory()
-    fields = (base.inventory_number, base.device_type, base.manufacturer, base.model, base.cost)
+    fields = (
+        base.inventory_number,
+        base.device_type,
+        base.manufacturer,
+        base.model,
+        base.cost,
+    )
     assert Computer(*fields, 16).ram_gb == 16
     assert Printer(*fields).color is False
     with pytest.raises(ValueError):
@@ -128,8 +159,15 @@ def test_async_provider(devices):
 
 
 def test_payload():
-    device = from_payload({"inventory_number": "A", "device_type": "Computer",
-                           "manufacturer": "Dell", "model": "X", "cost": "10.10"})
+    device = from_payload(
+        {
+            "inventory_number": "A",
+            "device_type": "Computer",
+            "manufacturer": "Dell",
+            "model": "X",
+            "cost": "10.10",
+        }
+    )
     assert float(device.cost) == pytest.approx(10.10)
 
 
@@ -183,14 +221,27 @@ def test_clean_malformed():
 
 def test_configuration(tmp_path, csv_path, monkeypatch):
     config = tmp_path / "config.yaml"
-    config.write_text(f"input: {csv_path.name}\noutput: out.json\nallowed_manufacturers: [Dell, HP]\nskip_invalid: true\n", encoding="utf-8")
+    config.write_text(
+        f"input: {csv_path.name}\noutput: out.json\nallowed_manufacturers: [Dell, HP]\nskip_invalid: true\n",
+        encoding="utf-8",
+    )
     assert load_config(config).skip_invalid is True
     result = run_import(config)
     assert result.exported == 2
     assert (tmp_path / "out.json").exists()
 
 
-@pytest.mark.parametrize("body", ["[broken", "[]", "input: x", "input: x\noutput: y\nskip_invalid: yesplease", "input: missing.csv\noutput: y", "input: a\noutput: b\nallowed_types: Computer"])
+@pytest.mark.parametrize(
+    "body",
+    [
+        "[broken",
+        "[]",
+        "input: x",
+        "input: x\noutput: y\nskip_invalid: yesplease",
+        "input: missing.csv\noutput: y",
+        "input: a\noutput: b\nallowed_types: Computer",
+    ],
+)
 def test_invalid_configuration(tmp_path, body):
     path = tmp_path / "bad.yaml"
     path.write_text(body, encoding="utf-8")
@@ -206,6 +257,7 @@ def test_missing_configuration(tmp_path):
 
 def test_import_export_integration(csv_path, tmp_path):
     import json
+
     config = FileConfig(csv_path, tmp_path / "out.json")
     stats = ImportStats()
     export_json(import_csv(config, stats), config.output, stats)
@@ -238,8 +290,10 @@ def test_atomic_failure_integration(csv_path, tmp_path):
 
 def test_export_os_failure(tmp_path, monkeypatch):
     from computer_inventory import fileio
+
     def fail(*args, **kwargs):
         raise OSError("simulated disk failure")
+
     monkeypatch.setattr(fileio.os, "replace", fail)
     with pytest.raises(ImportExportError):
         export_json(iter([]), tmp_path / "out.json", ImportStats())
@@ -248,7 +302,11 @@ def test_export_os_failure(tmp_path, monkeypatch):
 
 def test_input_os_failure(tmp_path):
     with pytest.raises(ImportExportError):
-        list(import_csv(FileConfig(tmp_path / "missing.csv", tmp_path / "out"), ImportStats()))
+        list(
+            import_csv(
+                FileConfig(tmp_path / "missing.csv", tmp_path / "out"), ImportStats()
+            )
+        )
 
 
 def test_missing_header(tmp_path):
@@ -258,10 +316,24 @@ def test_missing_header(tmp_path):
         list(import_csv(FileConfig(path, tmp_path / "out"), ImportStats()))
 
 
-@pytest.mark.parametrize("field,value", [("type", "Bad"), ("manufacturer", "Bad"), ("status", "Bad"), ("inventory_number", " ")])
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("type", "Bad"),
+        ("manufacturer", "Bad"),
+        ("status", "Bad"),
+        ("inventory_number", " "),
+    ],
+)
 def test_record_policy(field, value, tmp_path):
-    row = {"inventory_number": "A", "type": "Computer", "manufacturer": "Dell",
-           "model": "X", "value": "100", "status": "active"}
+    row = {
+        "inventory_number": "A",
+        "type": "Computer",
+        "manufacturer": "Dell",
+        "model": "X",
+        "value": "100",
+        "status": "active",
+    }
     row[field] = value
     config = FileConfig(tmp_path / "in", tmp_path / "out", ("Computer",), ("Dell",))
     with pytest.raises(RecordValidationError):

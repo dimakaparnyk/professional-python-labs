@@ -1,9 +1,10 @@
 """Lab 3: lazy CSV pipeline with constant-size aggregation."""
+
 import csv
 from collections import Counter
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from itertools import chain, count, islice
 from pathlib import Path
 
@@ -36,12 +37,18 @@ def clean_rows(rows: Iterable[dict[str, str]]) -> Iterator[dict[str, str]]:
 
 def parse_rows(rows: Iterable[dict[str, str]]) -> Iterator[Device]:
     for row in rows:
-        yield Device(row["inventory_number"], row["type"], row["manufacturer"],
-                     row["model"], Decimal(row["cost"]))
+        yield Device(
+            row["inventory_number"],
+            row["type"],
+            row["manufacturer"],
+            row["model"],
+            Decimal(row["cost"]),
+        )
 
 
-def filter_devices(devices: Iterable[Device], manufacturer: str = "",
-                   device_type: str = "") -> Iterator[Device]:
+def filter_devices(
+    devices: Iterable[Device], manufacturer: str = "", device_type: str = ""
+) -> Iterator[Device]:
     for device in devices:
         if manufacturer and device.manufacturer.casefold() != manufacturer.casefold():
             continue
@@ -53,13 +60,23 @@ def filter_devices(devices: Iterable[Device], manufacturer: str = "",
 def transform(devices: Iterable[Device]) -> Iterator[Device]:
     """Normalize outer whitespace through the validated immutable model."""
     for device in devices:
-        yield Device(device.inventory_number, device.device_type,
-                     device.manufacturer, device.model, device.cost)
+        yield Device(
+            device.inventory_number,
+            device.device_type,
+            device.manufacturer,
+            device.model,
+            device.cost,
+        )
 
 
-def pipeline(path: Path, manufacturer: str = "", device_type: str = "") -> Iterator[Device]:
-    yield from transform(filter_devices(parse_rows(clean_rows(read_rows(path))),
-                                        manufacturer, device_type))
+def pipeline(
+    path: Path, manufacturer: str = "", device_type: str = ""
+) -> Iterator[Device]:
+    yield from transform(
+        filter_devices(
+            parse_rows(clean_rows(read_rows(path))), manufacturer, device_type
+        )
+    )
 
 
 def multi_file(paths: Iterable[Path]) -> Iterator[Device]:
@@ -84,7 +101,11 @@ class StreamSummary:
 
     @property
     def average(self) -> Decimal:
-        return (self.total / self.count).quantize(Decimal("0.01")) if self.count else Decimal("0.00")
+        return (
+            (self.total / self.count).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+            if self.count
+            else Decimal("0.00")
+        )
 
 
 def aggregate(devices: Iterable[Device]) -> StreamSummary:
@@ -106,6 +127,12 @@ def generate_csv(path: Path, size: int) -> None:
         writer = csv.writer(stream)
         writer.writerow(["inventory_number", "type", "manufacturer", "model", "cost"])
         for i in range(size):
-            writer.writerow([next(numbers), ("Computer", "Printer")[i % 2],
-                             ("Dell", "HP", "Lenovo")[i % 3], f"Model-{i % 20}",
-                             f"{1000 + i % 90000}.25"])
+            writer.writerow(
+                [
+                    next(numbers),
+                    ("Computer", "Printer")[i % 2],
+                    ("Dell", "HP", "Lenovo")[i % 3],
+                    f"Model-{i % 20}",
+                    f"{1000 + i % 90000}.25",
+                ]
+            )

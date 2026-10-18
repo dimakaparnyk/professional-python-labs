@@ -1,15 +1,16 @@
 """Lab 5: validated streaming input and transactional file output."""
+
 import csv
+import json
+import logging
+import os
+import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-import json
-import logging
 from logging.handlers import RotatingFileHandler
-import os
 from pathlib import Path
-import tempfile
 from typing import TextIO
 
 import yaml
@@ -55,8 +56,9 @@ class ImportStats:
 
 def configure_logging(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    handler = RotatingFileHandler(path, maxBytes=1000000, backupCount=2,
-                                  encoding="utf-8")
+    handler = RotatingFileHandler(
+        path, maxBytes=1000000, backupCount=2, encoding="utf-8"
+    )
     handler.setFormatter(logging.Formatter("%(levelname)s %(message)s"))
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
@@ -73,14 +75,17 @@ def load_config(path: Path) -> FileConfig:
                 raise ValueError(f"Missing or invalid {key}")
         for key in ("allowed_types", "allowed_manufacturers", "allowed_statuses"):
             values = data.get(key, [])
-            if not isinstance(values, list) or any(not isinstance(x, str) or not x.strip() for x in values):
+            if not isinstance(values, list) or any(
+                not isinstance(x, str) or not x.strip() for x in values
+            ):
                 raise ValueError(f"Invalid {key}")
         skip = data.get("skip_invalid", False)
         if not isinstance(skip, bool):
             raise ValueError("skip_invalid must be boolean")
         base = path.resolve().parent
         result = FileConfig(
-            base / data["input"], base / data["output"],
+            base / data["input"],
+            base / data["output"],
             tuple(data.get("allowed_types", [])),
             tuple(data.get("allowed_manufacturers", [])),
             tuple(data.get("allowed_statuses", ["active", "maintenance", "retired"])),
@@ -98,11 +103,19 @@ def validate_record(row: dict[str, str], config: FileConfig) -> Device:
         if None in row or any(v is None for v in row.values()):
             raise ValueError("Malformed CSV record")
         cost = row.get("value", row.get("cost", ""))
-        device = Device(row["inventory_number"], row["type"], row["manufacturer"],
-                        row["model"], Decimal(cost))
+        device = Device(
+            row["inventory_number"],
+            row["type"],
+            row["manufacturer"],
+            row["model"],
+            Decimal(cost),
+        )
         if config.allowed_types and device.device_type not in config.allowed_types:
             raise ValueError("Device type is not allowed")
-        if config.allowed_manufacturers and device.manufacturer not in config.allowed_manufacturers:
+        if (
+            config.allowed_manufacturers
+            and device.manufacturer not in config.allowed_manufacturers
+        ):
             raise ValueError("Manufacturer is not allowed")
         status = row.get("status", "active")
         if status not in config.allowed_statuses:
@@ -118,7 +131,9 @@ def import_csv(config: FileConfig, stats: ImportStats) -> Iterator[Device]:
         with config.input.open(encoding="utf-8-sig", newline="") as source:
             reader = csv.DictReader(source)
             required = {"inventory_number", "type", "manufacturer", "model"}
-            if not required <= set(reader.fieldnames or []) or not ({"cost", "value"} & set(reader.fieldnames or [])):
+            if not required <= set(reader.fieldnames or []) or not (
+                {"cost", "value"} & set(reader.fieldnames or [])
+            ):
                 raise ImportExportError("Required CSV columns are missing")
             for line, row in enumerate(reader, 2):
                 stats.processed += 1
@@ -156,9 +171,13 @@ def atomic_text(path: Path) -> Iterator[TextIO]:
 
 
 def device_json(device: Device) -> dict[str, str]:
-    return {"inventory_number": device.inventory_number,
-            "type": device.device_type, "manufacturer": device.manufacturer,
-            "model": device.model, "value": f"{device.cost:.2f}"}
+    return {
+        "inventory_number": device.inventory_number,
+        "type": device.device_type,
+        "manufacturer": device.manufacturer,
+        "model": device.model,
+        "value": f"{device.cost:.2f}",
+    }
 
 
 def export_json(devices: Iterator[Device], path: Path, stats: ImportStats) -> None:

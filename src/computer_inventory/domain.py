@@ -1,13 +1,17 @@
 """Lab 4: typed object model, composition, generics and dependency injection."""
+
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Generic, Protocol, TypeVar, TypedDict
+from typing import Generic, Protocol, TypedDict, TypeVar
 
 from computer_inventory.models import Device
 from computer_inventory.services import (
-    average_cost, filter_by_manufacturer, most_expensive, total_cost,
+    average_cost,
+    filter_by_manufacturer,
+    most_expensive,
+    total_cost,
 )
 
 
@@ -91,8 +95,9 @@ class StandardMaintenance(MaintenancePolicy):
 
 
 class MaintenanceService:
-    def __init__(self, repository: InventoryRepository[Device],
-                 policy: MaintenancePolicy) -> None:
+    def __init__(
+        self, repository: InventoryRepository[Device], policy: MaintenancePolicy
+    ) -> None:
         self.repository = repository
         self.policy = policy
 
@@ -153,9 +158,13 @@ class DevicePayload(TypedDict):
 
 
 def from_payload(payload: DevicePayload) -> Device:
-    return Device(payload["inventory_number"], payload["device_type"],
-                  payload["manufacturer"], payload["model"],
-                  Decimal(payload["cost"]))
+    return Device(
+        payload["inventory_number"],
+        payload["device_type"],
+        payload["manufacturer"],
+        payload["model"],
+        Decimal(payload["cost"]),
+    )
 
 
 class AsyncInventoryProvider(Protocol):

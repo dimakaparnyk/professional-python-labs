@@ -1,13 +1,17 @@
 from decimal import Decimal
 from pathlib import Path
-import sqlite3
+
 import pytest
-from sqlalchemy import select, text
+from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
 from computer_inventory.database import (
-    make_engine, migrate, ManufacturerRepository, DeviceRepository,
-    DeviceRow, register_batch, dbapi_search,
+    DeviceRepository,
+    ManufacturerRepository,
+    dbapi_search,
+    make_engine,
+    register_batch,
 )
 
 
@@ -54,18 +58,29 @@ def test_persistent_commit_dbapi(engine, devices):
 def test_migration_and_foreign_key(engine):
     with engine.connect() as connection:
         assert connection.exec_driver_sql("PRAGMA user_version").scalar() == 2
-        assert "location" in [row[1] for row in connection.exec_driver_sql("PRAGMA table_info(devices)")]
+        assert "location" in [
+            row[1] for row in connection.exec_driver_sql("PRAGMA table_info(devices)")
+        ]
         assert connection.exec_driver_sql("PRAGMA foreign_keys").scalar() == 1
     with Session(engine) as session:
         with pytest.raises(IntegrityError):
-            session.execute(text("INSERT INTO devices(inventory_number,type,model,value_cents,manufacturer_id) VALUES ('A','PC','M',0,999)"))
+            session.execute(
+                text(
+                    "INSERT INTO devices(inventory_number,type,model,value_cents,manufacturer_id) VALUES ('A','PC','M',0,999)"
+                )
+            )
         session.rollback()
 
 
 def test_empty_and_missing(engine):
     with Session(engine) as session:
         repo = DeviceRepository(session)
-        assert repo.statistics() == {"count": 0, "total": "0.00", "average": "0.00", "most_expensive_id": None}
+        assert repo.statistics() == {
+            "count": 0,
+            "total": "0.00",
+            "average": "0.00",
+            "most_expensive_id": None,
+        }
         with pytest.raises(LookupError):
             repo.delete(999)
         with pytest.raises(LookupError):

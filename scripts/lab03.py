@@ -1,13 +1,13 @@
 """Eager/lazy measurements; never invent benchmark results."""
+
 import argparse
-from contextlib import closing
-from dataclasses import asdict
 import json
+import tracemalloc
+from contextlib import closing
 from pathlib import Path
 from time import perf_counter
-import tracemalloc
 
-from computer_inventory.streaming import aggregate, generate_csv, pipeline, batches
+from computer_inventory.streaming import aggregate, batches, generate_csv, pipeline
 
 
 def measure(path: Path, eager: bool) -> dict[str, float]:
@@ -25,8 +25,13 @@ def measure(path: Path, eager: bool) -> dict[str, float]:
     elapsed = perf_counter() - start
     peak = tracemalloc.get_traced_memory()[1] / 1024**2
     tracemalloc.stop()
-    return {"elapsed_s": elapsed, "peak_MiB": peak,
-            "first_s": first, "count": result.count, "total": str(result.total)}
+    return {
+        "elapsed_s": elapsed,
+        "peak_MiB": peak,
+        "first_s": first,
+        "count": result.count,
+        "total": str(result.total),
+    }
 
 
 def main() -> None:
@@ -54,12 +59,21 @@ def main() -> None:
     matches = [d for d in pipeline(early_path) if d.manufacturer == "Dell"]
     eager_time = perf_counter() - start
     assert first == matches[0]
-    early = {"records": 1000000, "lazy_s": lazy_time, "eager_s": eager_time,
-             "first_id": first.inventory_number}
+    early = {
+        "records": 1000000,
+        "lazy_s": lazy_time,
+        "eager_s": eager_time,
+        "first_id": first.inventory_number,
+    }
     print(json.dumps({"early_termination": early}), flush=True)
     (args.output / "results03.json").write_text(
-        json.dumps({"measurements": results, "early": early}, indent=2), encoding="utf-8")
-    assert sum(len(b) for b in batches(pipeline(args.output / "inventory-10000.csv"), 333)) == 10000
+        json.dumps({"measurements": results, "early": early}, indent=2),
+        encoding="utf-8",
+    )
+    assert (
+        sum(len(b) for b in batches(pipeline(args.output / "inventory-10000.csv"), 333))
+        == 10000
+    )
 
 
 if __name__ == "__main__":

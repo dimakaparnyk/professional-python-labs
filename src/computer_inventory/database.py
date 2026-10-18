@@ -1,10 +1,20 @@
 """Lab 7: SQLite, versioned schema and SQLAlchemy repositories."""
-from decimal import Decimal
+
 import sqlite3
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import CheckConstraint, ForeignKey, Integer, String, create_engine, event, select, func
+from sqlalchemy import (
+    CheckConstraint,
+    ForeignKey,
+    Integer,
+    String,
+    create_engine,
+    event,
+    func,
+    select,
+)
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship
 
@@ -37,7 +47,9 @@ class DeviceRow(Base):
     __tablename__ = "devices"
     __table_args__ = (CheckConstraint("value_cents >= 0"),)
     id: Mapped[int] = mapped_column(primary_key=True)
-    inventory_number: Mapped[str] = mapped_column(String(collation="NOCASE"), unique=True)
+    inventory_number: Mapped[str] = mapped_column(
+        String(collation="NOCASE"), unique=True
+    )
     type: Mapped[str] = mapped_column(String)
     model: Mapped[str] = mapped_column(String)
     value_cents: Mapped[int] = mapped_column(Integer)
@@ -62,12 +74,16 @@ def migrate(connection: sqlite3.Connection) -> None:
 
 def make_engine(url: str) -> Engine:
     engine = create_engine(url, connect_args={"check_same_thread": False})
+
     @event.listens_for(engine, "connect")
     def enable_foreign_keys(connection: Any, record: Any) -> None:
         connection.execute("PRAGMA foreign_keys=ON")
+
     raw = engine.raw_connection()
     try:
-        migrate(raw.driver_connection)
+        connection = raw.driver_connection
+        assert isinstance(connection, sqlite3.Connection)
+        migrate(connection)
     finally:
         raw.close()
     return engine
@@ -86,12 +102,17 @@ class ManufacturerRepository:
         return row
 
     def get_or_create(self, name: str) -> ManufacturerRow:
-        row = self.session.scalar(select(ManufacturerRow).where(
-            func.lower(ManufacturerRow.name) == name.strip().lower()))
+        row = self.session.scalar(
+            select(ManufacturerRow).where(
+                func.lower(ManufacturerRow.name) == name.strip().lower()
+            )
+        )
         return row if row is not None else self.add(name)
 
     def all(self) -> list[ManufacturerRow]:
-        return list(self.session.scalars(select(ManufacturerRow).order_by(ManufacturerRow.id)))
+        return list(
+            self.session.scalars(select(ManufacturerRow).order_by(ManufacturerRow.id))
+        )
 
 
 class DeviceRepository:
@@ -99,10 +120,17 @@ class DeviceRepository:
         self.session = session
 
     def add(self, device: Device, location: str | None = None) -> DeviceRow:
-        manufacturer = ManufacturerRepository(self.session).get_or_create(device.manufacturer)
-        row = DeviceRow(inventory_number=device.inventory_number, type=device.device_type,
-                        model=device.model, value_cents=int(device.cost * 100),
-                        manufacturer_id=manufacturer.id, location=location)
+        manufacturer = ManufacturerRepository(self.session).get_or_create(
+            device.manufacturer
+        )
+        row = DeviceRow(
+            inventory_number=device.inventory_number,
+            type=device.device_type,
+            model=device.model,
+            value_cents=int(device.cost * 100),
+            manufacturer_id=manufacturer.id,
+            location=location,
+        )
         self.session.add(row)
         self.session.flush()
         return row
@@ -111,13 +139,18 @@ class DeviceRepository:
         return self.session.get(DeviceRow, device_id)
 
     def find(self, inventory_number: str) -> DeviceRow | None:
-        return self.session.scalar(select(DeviceRow).where(
-            func.lower(DeviceRow.inventory_number) == inventory_number.strip().lower()))
+        return self.session.scalar(
+            select(DeviceRow).where(
+                DeviceRow.inventory_number == inventory_number.strip()
+            )
+        )
 
     def all(self, manufacturer: str | None = None) -> list[DeviceRow]:
         statement = select(DeviceRow).join(DeviceRow.manufacturer)
         if manufacturer:
-            statement = statement.where(func.lower(ManufacturerRow.name) == manufacturer.strip().lower())
+            statement = statement.where(
+                func.lower(ManufacturerRow.name) == manufacturer.strip().lower()
+            )
         return list(self.session.scalars(statement.order_by(DeviceRow.id)))
 
     def change_cost(self, device_id: int, cost: Decimal) -> DeviceRow:
@@ -138,12 +171,29 @@ class DeviceRepository:
         self.session.flush()
 
     def statistics(self) -> dict[str, Any]:
-        count, total = self.session.execute(select(func.count(DeviceRow.id),
-                         func.coalesce(func.sum(DeviceRow.value_cents), 0))).one()
-        best = self.session.scalar(select(DeviceRow).order_by(DeviceRow.value_cents.desc(), DeviceRow.id).limit(1))
-        return {"count": count, "total": f"{Decimal(total)/100:.2f}",
-                "average": f"{Decimal(total)/100/count:.2f}" if count else "0.00",
-                "most_expensive_id": best.id if best else None}
+        count, total = self.session.execute(
+            select(
+                func.count(DeviceRow.id),
+                func.coalesce(func.sum(DeviceRow.value_cents), 0),
+            )
+        ).one()
+        best = self.session.scalar(
+            select(DeviceRow)
+            .order_by(DeviceRow.value_cents.desc(), DeviceRow.id)
+            .limit(1)
+        )
+        return {
+            "count": count,
+            "total": f"{Decimal(total) / 100:.2f}",
+            "average": str(
+                (Decimal(total) / 100 / count).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                )
+            )
+            if count
+            else "0.00",
+            "most_expensive_id": best.id if best else None,
+        }
 
 
 def register_batch(session: Session, devices: list[Device]) -> None:
@@ -154,7 +204,9 @@ def register_batch(session: Session, devices: list[Device]) -> None:
             repository.add(device)
 
 
-def dbapi_search(path: Path, inventory_number: str, manufacturer: str = "") -> list[tuple[Any, ...]]:
+def dbapi_search(
+    path: Path, inventory_number: str, manufacturer: str = ""
+) -> list[tuple[Any, ...]]:
     with sqlite3.connect(path) as connection:
         return connection.execute(
             "SELECT d.inventory_number, m.name, d.value_cents FROM devices d "

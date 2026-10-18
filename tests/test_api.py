@@ -1,7 +1,9 @@
 import asyncio
+
 import httpx
 import pytest
 from fastapi.testclient import TestClient
+
 from computer_inventory.api import create_app
 from computer_inventory.async_client import fetch_manufacturers
 
@@ -15,8 +17,13 @@ def client(tmp_path):
 
 @pytest.fixture
 def payload():
-    return {"inventory_number": "A-1", "type": "Computer", "manufacturer": "Dell",
-            "model": "Latitude", "value": "120.50"}
+    return {
+        "inventory_number": "A-1",
+        "type": "Computer",
+        "manufacturer": "Dell",
+        "model": "Latitude",
+        "value": "120.50",
+    }
 
 
 def test_api_crud_statistics(client, payload):
@@ -28,11 +35,21 @@ def test_api_crud_statistics(client, payload):
     assert client.get(f"/devices/{device_id}").status_code == 200
     assert len(client.get("/devices", params={"manufacturer": "Dell"}).json()) == 1
     assert len(client.get("/devices", params={"inventory_number": "A-1"}).json()) == 1
+    assert (
+        client.get(
+            "/devices", params={"inventory_number": "a-1", "manufacturer": "Dell"}
+        ).json()[0]["id"]
+        == device_id
+    )
+    assert client.get("/devices", params={"inventory_number": "missing"}).json() == []
     assert client.get("/statistics").json()["total"] == "120.50"
     assert client.get("/devices/statistics").status_code == 200
     mid = body["manufacturer_id"]
     assert len(client.get(f"/manufacturers/{mid}/devices").json()) == 1
-    assert client.patch(f"/devices/{device_id}", json={"value": "200"}).json()["value"] == "200.00"
+    assert (
+        client.patch(f"/devices/{device_id}", json={"value": "200"}).json()["value"]
+        == "200.00"
+    )
     assert client.post("/devices", json=payload).status_code == 409
     assert client.delete(f"/devices/{device_id}").status_code == 204
     assert client.get(f"/devices/{device_id}").status_code == 404
@@ -62,6 +79,7 @@ def test_async_retry_concurrency():
     attempts = {}
     active = 0
     maximum = 0
+
     async def handler(request):
         nonlocal active, maximum
         active += 1
@@ -71,9 +89,15 @@ def test_async_retry_concurrency():
         name = request.url.path.split("/")[-1]
         attempts[name] = attempts.get(name, 0) + 1
         return httpx.Response(503 if attempts[name] == 1 else 200, json={"name": name})
+
     async def run():
-        async with httpx.AsyncClient(transport=httpx.MockTransport(handler), base_url="https://provider.example") as client:
-            return await fetch_manufacturers(client, ["Dell", "HP", "Lenovo"], concurrency=2)
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), base_url="https://provider.example"
+        ) as client:
+            return await fetch_manufacturers(
+                client, ["Dell", "HP", "Lenovo"], concurrency=2
+            )
+
     result = asyncio.run(run())
     assert len(result) == 3 and maximum <= 2
     assert attempts == {"Dell": 2, "HP": 2, "Lenovo": 2}
@@ -84,9 +108,31 @@ def test_async_failure_timeout():
         async def handler(request):
             await asyncio.sleep(0.1)
             return httpx.Response(200, json={})
-        async with httpx.AsyncClient(transport=httpx.MockTransport(handler), base_url="https://provider.example") as client:
+
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), base_url="https://provider.example"
+        ) as client:
             with pytest.raises(TimeoutError):
                 await fetch_manufacturers(client, ["Dell"], retries=0, timeout=0.001)
             with pytest.raises(ValueError):
                 await fetch_manufacturers(client, ["Dell"], concurrency=0)
+
     asyncio.run(run())
+
+
+def test_async_endpoint(client, monkeypatch):
+    from unittest.mock import AsyncMock
+
+    from computer_inventory import api
+
+    fetch = AsyncMock(return_value=[{"name": "Dell"}])
+    monkeypatch.setattr(api, "fetch_manufacturers", fetch)
+    assert client.get("/manufacturers/details", params={"names": "Dell"}).json() == [
+        {"name": "Dell"}
+    ]
+    fetch.assert_awaited_once()
+    fetch.side_effect = TimeoutError("provider timeout")
+    assert (
+        client.get("/manufacturers/details", params={"names": "Dell"}).status_code
+        == 502
+    )

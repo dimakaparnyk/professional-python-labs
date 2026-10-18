@@ -1,8 +1,14 @@
 from decimal import Decimal
+
 import pytest
+
 from computer_inventory.performance import (
-    CachedInventory, numeric_statistics, numpy_statistics,
-    parallel_statistics, synchronized_count, import_files,
+    CachedInventory,
+    import_files,
+    numeric_statistics,
+    numpy_statistics,
+    parallel_statistics,
+    synchronized_count,
 )
 
 
@@ -14,7 +20,9 @@ def test_optimized_equivalence(values):
 
 
 def test_process_equivalence():
-    assert parallel_statistics(list(range(100)), 2, True) == numeric_statistics(list(range(100)))
+    assert parallel_statistics(list(range(100)), 2, True) == numeric_statistics(
+        list(range(100))
+    )
 
 
 def test_cache_invalidation(devices):
@@ -47,6 +55,7 @@ def test_lock_and_errors():
 
 def test_parallel_file_import(tmp_path):
     from computer_inventory.streaming import generate_csv
+
     path = tmp_path / "input.csv"
     generate_csv(path, 10)
     assert import_files([path, path], 2) == 20

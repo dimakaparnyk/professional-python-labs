@@ -1,13 +1,19 @@
 """Run strict/tolerant and atomic-output experiments."""
-from dataclasses import asdict, replace
+
 import csv
 import json
-from pathlib import Path
 import sys
+from dataclasses import asdict
+from pathlib import Path
 
 from computer_inventory.fileio import (
-    FileConfig, ImportStats, RecordValidationError, atomic_text,
-    configure_logging, export_json, import_csv, load_config, run_import,
+    FileConfig,
+    ImportStats,
+    RecordValidationError,
+    atomic_text,
+    configure_logging,
+    export_json,
+    import_csv,
 )
 
 
@@ -20,7 +26,15 @@ def main() -> None:
         writer = csv.writer(stream)
         writer.writerow(["inventory_number", "type", "manufacturer", "model", "value"])
         for i in range(1010):
-            writer.writerow([str(i), "Computer", "Dell", "Model", "bad" if i % 101 == 100 else "100"])
+            writer.writerow(
+                [
+                    str(i),
+                    "Computer",
+                    "Dell",
+                    "Model",
+                    "bad" if i % 101 == 100 else "100",
+                ]
+            )
     rows = []
     for tolerant in (False, True):
         target = output / f"export-{tolerant}.json"
@@ -31,8 +45,16 @@ def main() -> None:
             export_json(import_csv(config, stats), target, stats)
             status = "success"
         except RecordValidationError as error:
-            status = type(error).__name__ + " caused by " + type(error.__cause__).__name__
-        rows.append({"mode": "tolerant" if tolerant else "strict", **asdict(stats), "status": status})
+            status = (
+                type(error).__name__ + " caused by " + type(error.__cause__).__name__
+            )
+        rows.append(
+            {
+                "mode": "tolerant" if tolerant else "strict",
+                **asdict(stats),
+                "status": status,
+            }
+        )
         assert not list(output.glob("*.tmp"))
         if not tolerant:
             assert target.read_text(encoding="utf-8") == '["previous valid output"]'

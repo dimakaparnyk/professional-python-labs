@@ -1,18 +1,25 @@
 """Lab 8: persistent REST API; use create_app for isolated tests."""
+
+import os
 from collections.abc import Iterator
 from contextlib import asynccontextmanager
 from decimal import Decimal
-import os
 from typing import Annotated, Any
 
+import httpx
 from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from computer_inventory.async_client import fetch_manufacturers
 from computer_inventory.database import (
-    DeviceRepository, DeviceRow, ManufacturerRepository, ManufacturerRow, make_engine,
+    DeviceRepository,
+    DeviceRow,
+    ManufacturerRepository,
+    ManufacturerRow,
+    make_engine,
 )
 from computer_inventory.models import Device
 
@@ -66,14 +73,20 @@ class ManufacturerView(BaseModel):
 
 
 def view(row: DeviceRow) -> DeviceView:
-    return DeviceView(id=row.id, inventory_number=row.inventory_number,
-                      type=row.type, manufacturer=row.manufacturer.name,
-                      manufacturer_id=row.manufacturer_id, model=row.model,
-                      value=f"{Decimal(row.value_cents)/100:.2f}", location=row.location)
+    return DeviceView(
+        id=row.id,
+        inventory_number=row.inventory_number,
+        type=row.type,
+        manufacturer=row.manufacturer.name,
+        manufacturer_id=row.manufacturer_id,
+        model=row.model,
+        value=f"{Decimal(row.value_cents) / 100:.2f}",
+        location=row.location,
+    )
 
 
 def create_app(database_url: str | None = None) -> FastAPI:
-    url = database_url or os.getenv("DATABASE_URL", "sqlite:///inventory.db")
+    url = database_url or os.getenv("DATABASE_URL") or "sqlite:///inventory.db"
     engine = make_engine(url)
 
     @asynccontextmanager
@@ -95,25 +108,54 @@ def create_app(database_url: str | None = None) -> FastAPI:
         database.execute(select(1))
         return {"status": "ok"}
 
+    @app.get("/manufacturers/details")
+    async def manufacturer_details(
+        names: list[str] = Query(..., min_length=1, max_length=100),
+    ) -> list[dict[str, Any]]:
+        base_url = os.getenv("PROVIDER_URL", "http://127.0.0.1:8001")
+        try:
+            async with httpx.AsyncClient(base_url=base_url) as client:
+                return await fetch_manufacturers(client, names)
+        except (httpx.HTTPError, TimeoutError) as error:
+            raise HTTPException(502, "Manufacturer provider unavailable") from error
+
     @app.get("/statistics")
     @app.get("/devices/statistics")
     def statistics(database: Database) -> dict[str, Any]:
         return DeviceRepository(database).statistics()
 
     @app.get("/devices", response_model=list[DeviceView])
-    def list_devices(database: Database, manufacturer: str | None = None,
-                     inventory_number: str | None = None,
-                     offset: int = Query(0, ge=0), limit: int = Query(50, ge=1, le=100)) -> list[DeviceView]:
+    def list_devices(
+        database: Database,
+        manufacturer: str | None = None,
+        inventory_number: str | None = None,
+        offset: int = Query(0, ge=0),
+        limit: int = Query(50, ge=1, le=100),
+    ) -> list[DeviceView]:
         repository = DeviceRepository(database)
-        rows = repository.all(manufacturer)
         if inventory_number:
-            rows = [row for row in rows if row.inventory_number.casefold() == inventory_number.strip().casefold()]
-        return [view(row) for row in rows[offset:offset + limit]]
+            found = repository.find(inventory_number)
+            rows = [found] if found is not None else []
+            if manufacturer:
+                rows = [
+                    row
+                    for row in rows
+                    if row.manufacturer.name.casefold()
+                    == manufacturer.strip().casefold()
+                ]
+        else:
+            rows = repository.all(manufacturer)
+        return [view(row) for row in rows[offset : offset + limit]]
 
     @app.post("/devices", status_code=201, response_model=DeviceView)
     def add_device(payload: DeviceCreate, database: Database) -> DeviceView:
-        device = Device(payload.inventory_number, payload.type, payload.manufacturer,
-                        payload.model, payload.value)
+        device = Device(
+            payload.inventory_number,
+            payload.type,
+            payload.manufacturer,
+            payload.model,
+            payload.value,
+        )
         try:
             row = DeviceRepository(database).add(device, payload.location)
             result = view(row)
@@ -131,7 +173,9 @@ def create_app(database_url: str | None = None) -> FastAPI:
         return view(row)
 
     @app.patch("/devices/{device_id}", response_model=DeviceView)
-    def update_device(device_id: int, payload: DevicePatch, database: Database) -> DeviceView:
+    def update_device(
+        device_id: int, payload: DevicePatch, database: Database
+    ) -> DeviceView:
         try:
             row = DeviceRepository(database).change_cost(device_id, payload.value)
             result = view(row)
@@ -154,7 +198,9 @@ def create_app(database_url: str | None = None) -> FastAPI:
         return ManufacturerRepository(database).all()
 
     @app.post("/manufacturers", status_code=201, response_model=ManufacturerView)
-    def add_manufacturer(payload: ManufacturerCreate, database: Database) -> ManufacturerRow:
+    def add_manufacturer(
+        payload: ManufacturerCreate, database: Database
+    ) -> ManufacturerRow:
         try:
             row = ManufacturerRepository(database).add(payload.name)
             database.commit()
@@ -164,8 +210,12 @@ def create_app(database_url: str | None = None) -> FastAPI:
             database.rollback()
             raise HTTPException(409, "Manufacturer already exists") from error
 
-    @app.get("/manufacturers/{manufacturer_id}/devices", response_model=list[DeviceView])
-    def manufacturer_devices(manufacturer_id: int, database: Database) -> list[DeviceView]:
+    @app.get(
+        "/manufacturers/{manufacturer_id}/devices", response_model=list[DeviceView]
+    )
+    def manufacturer_devices(
+        manufacturer_id: int, database: Database
+    ) -> list[DeviceView]:
         row = database.get(ManufacturerRow, manufacturer_id)
         if row is None:
             raise HTTPException(404, "Manufacturer not found")

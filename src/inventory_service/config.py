@@ -1,6 +1,7 @@
 """Validated environment configuration; no embedded credentials."""
-from dataclasses import dataclass
+
 import os
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -11,9 +12,11 @@ class Settings:
 
     @classmethod
     def from_env(cls) -> "Settings":
-        result = cls(os.getenv("DATABASE_URL", "sqlite:///inventory.db"),
-                     os.getenv("APP_ENV", os.getenv("ENVIRONMENT", "development")),
-                     os.getenv("LOG_LEVEL", "INFO").upper())
+        result = cls(
+            os.getenv("DATABASE_URL", "sqlite:///inventory.db"),
+            os.getenv("APP_ENV", os.getenv("ENVIRONMENT", "development")),
+            os.getenv("LOG_LEVEL", "INFO").upper(),
+        )
         if result.app_env not in {"development", "test", "production"}:
             raise ValueError("APP_ENV must be development, test or production")
         if result.log_level not in {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}:

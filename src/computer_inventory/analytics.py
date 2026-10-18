@@ -1,4 +1,5 @@
 """Lab 2: structured data, functional decomposition and decorators."""
+
 from collections import Counter, defaultdict, deque
 from collections.abc import Callable, Iterable
 from decimal import Decimal
@@ -23,7 +24,9 @@ def timed(label: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
                 return function(*args, **kwargs)
             finally:
                 history.append((label, perf_counter() - start))
+
         return wrapped
+
     return decorate
 
 
@@ -36,10 +39,14 @@ def select(devices: Iterable[Device], **criteria: str) -> list[Device]:
     allowed = {"device_type", "manufacturer", "inventory_number", "model"}
     if not criteria.keys() <= allowed:
         raise ValueError("Unknown search field")
-    return [d for d in devices if all(
-        str(getattr(d, key)).casefold() == value.strip().casefold()
-        for key, value in criteria.items()
-    )]
+    return [
+        d
+        for d in devices
+        if all(
+            str(getattr(d, key)).casefold() == value.strip().casefold()
+            for key, value in criteria.items()
+        )
+    ]
 
 
 def merge(*groups: Iterable[Device]) -> list[Device]:
@@ -58,7 +65,9 @@ def build_index(devices: Iterable[Device]) -> dict[str, Device]:
     return index
 
 
-def group_by(devices: Iterable[Device], field: str = "manufacturer") -> dict[str, list[Device]]:
+def group_by(
+    devices: Iterable[Device], field: str = "manufacturer"
+) -> dict[str, list[Device]]:
     if field not in {"manufacturer", "device_type"}:
         raise ValueError("Unsupported grouping field")
     groups: defaultdict[str, list[Device]] = defaultdict(list)
@@ -76,7 +85,8 @@ def summarize(devices: Iterable[Device]) -> dict[str, object]:
     items = list(devices)
     best = most_expensive(items)
     return {
-        "count": len(items), "total": str(total_cost(items)),
+        "count": len(items),
+        "total": str(total_cost(items)),
         "average": str(average_cost(items)),
         "most_expensive": best.inventory_number if best else None,
         "manufacturers": sorted(unique_manufacturers(items)),
