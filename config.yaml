@@ -1,0 +1,6 @@
+input: data/inventory.csv
+output: data/export.json
+allowed_types: [Computer, Printer]
+allowed_manufacturers: [Dell, HP, Lenovo]
+allowed_statuses: [active, maintenance, retired]
+skip_invalid: false

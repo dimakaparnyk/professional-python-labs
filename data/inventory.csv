@@ -1,0 +1,4 @@
+inventory_number,type,manufacturer,model,value,status
+INV-001,Computer,Dell,Latitude,45000.00,active
+INV-002,Printer,HP,LaserJet,7200.00,maintenance
+INV-003,Computer,Lenovo,ThinkPad,32000.00,active
