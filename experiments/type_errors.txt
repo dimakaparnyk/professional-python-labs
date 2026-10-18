@@ -1,0 +1,8 @@
+# Copy this to a temporary .py file and run mypy; not production code.
+from computer_inventory.domain import InMemoryRepository, Manufacturer
+from computer_inventory.models import Device
+inventory_number: int = "INV-001"
+def total() -> int:
+    return "100"
+repository: InMemoryRepository[Device] = InMemoryRepository()
+repository.add(Manufacturer("Dell"))
