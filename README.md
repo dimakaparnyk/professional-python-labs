@@ -190,3 +190,7 @@ mypy, pytest з branch coverage, package build і Docker build/run/health.
 7. Показати benchmark.csv, profile.txt та інвалідацію кешу.
 8. Зібрати wheel/sdist, запустити Docker і показати /health.
 9. Показати фактичний результат workflow у вкладці Actions.
+
+## Підтверджений результат CI від 18.10.2026
+
+[Inventory CI №1](https://github.com/dimakaparnyk/professional-python-labs/actions/runs/39135119445) завершився успішно: Python 3.11, Python 3.12, Docker build/run та HTTP /health. Перевірено commit 2e3fb3d. Це оновлення уточнює попередні згадки про ще не запущений workflow; локальний Docker у Windows залишається неперевіреним.

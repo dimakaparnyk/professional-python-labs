@@ -14,13 +14,14 @@
 - SQLite: CRUD, UNIQUE, FOREIGN KEY та rollback перевірено тестами.
 - Експерименти ЛР2, ЛР3, ЛР5, ЛР6, ЛР9 виконано; журнали в docs/results.
 
-## Що потребує окремого фактичного запуску
+## Фактичний Docker та CI
 
-Docker у середовищі не знайдено. Dockerfile, Compose і healthcheck підготовлені,
-але image build та container run локально не підтверджено.
+18.10.2026 Inventory CI №1 пройшов у приватному репозиторії dimakaparnyk/professional-python-labs.
+https://github.com/dimakaparnyk/professional-python-labs/actions/runs/39135119445
 
-GitHub Actions підготовлено. Workflow не запускався в зовнішньому репозиторії,
-тому green CI, Docker build у CI та знімки цих станів ще не підтверджено.
-
-Потрібно виконати команди з README на машині з Docker, завантажити репозиторій
-за docs/GITHUB.md та перевірити фактичні jobs у Actions.
+Перевірений commit: 2e3fb3d3e73f29ffa93689d631746e20beba7caf.
+Quality для Python 3.11 і 3.12 — Success. Docker build, run із volume та HTTP /health — Success.
+Відповідь контейнера: {"status":"ok"}. Docker job — 28 с; весь workflow — 51 с.
+Створено packages-3.11 та packages-3.12. Попередження Node.js 20 і зміни ubuntu-latest не вплинули на успіх.
+Локальний Docker Desktop у Windows окремо не перевірений.
+Оновлення документації 19.10.2026 не змінює виконуваний код перевіреного commit.
