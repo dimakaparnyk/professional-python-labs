@@ -179,18 +179,10 @@ mypy, pytest з branch coverage, package build і Docker build/run/health.
 підтверджується лише реальним запуском у вашому репозиторії. Локально Docker
 не перевірено, оскільки виконуваний файл Docker у середовищі не знайдено.
 
-## Сценарій захисту
-
-1. Показати структуру, моделі й історію git log --oneline.
-2. Запустити --demo, --analytics та --oop-demo.
-3. Показати YAML, імпорт і збереження попереднього JSON після помилки.
-4. Запустити pytest і переглянути htmlcov/index.html.
-5. Показати БД, parameterized query, міграцію location і rollback.
-6. Запустити API й створити, знайти, змінити та видалити пристрій у /docs.
-7. Показати benchmark.csv, profile.txt та інвалідацію кешу.
-8. Зібрати wheel/sdist, запустити Docker і показати /health.
-9. Показати фактичний результат workflow у вкладці Actions.
-
 ## Підтверджений результат CI від 18.10.2026
 
 [Inventory CI №1](https://github.com/dimakaparnyk/professional-python-labs/actions/runs/39135119445) завершився успішно: Python 3.11, Python 3.12, Docker build/run та HTTP /health. Перевірено commit 2e3fb3d. Це оновлення уточнює попередні згадки про ще не запущений workflow; локальний Docker у Windows залишається неперевіреним.
+
+## Звіти
+
+Звіти розміщено в папці `report/`. Назви: `Капарник_Дмитро_Лаб01_V13` … `Капарник_Дмитро_Лаб10_V13`. Word-версії збережено для редагування; PDF-версії формуються експортом із Microsoft Word.
